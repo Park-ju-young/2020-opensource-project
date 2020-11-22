@@ -1,0 +1,15 @@
+{
+  "name": "foodadtvinfo",
+  "version": "0.0.1",
+  "description": "chat bot informs food additives' information",
+  "main": "index.js",
+  "scripts": {
+    "start":"nodemon app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juyung Park,Mingu Kang,Solhee Park",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
