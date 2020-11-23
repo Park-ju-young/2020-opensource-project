@@ -4,12 +4,13 @@
   "description": "chat bot informs food additives' information",
   "main": "index.js",
   "scripts": {
-    "start":"nodemon app",
+    "start": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Juyung Park,Mingu Kang,Solhee Park",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "request": "^2.88.2"
   }
 }
