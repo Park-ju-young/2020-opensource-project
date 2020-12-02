@@ -8,9 +8,9 @@ var url = 'http://apis.data.go.kr/1470000/FoodAdtvInfoService/getFoodAdtvInfoLis
 var key ='ofY2ppOq5kBqT5jYPaGsW%2BEy7OR5a1bf5Z9PHvqNKvwO5DSCaU2x2qCj%2FoXnuB1YVbMTlErkHWSMEsR5b7isrw%3D%3D';
 var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' +key; 
 //queryParams += '&' + encodeURIComponent('prdlst_cd') + '=' + encodeURIComponent('C0118010300000'); 
-queryParams += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent('스위트초콜릿'); 
-//queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('3'); 
-//queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
+queryParams += '&' + encodeURIComponent('pc_kor_nm');// + '=' + encodeURIComponent('스위트초콜릿'); 
+queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('213'); 
+queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
 
 global.foods = new Array();
 
@@ -29,16 +29,19 @@ request({
             //console.log(xmltojson);
             var resObj = eval("("+xmltojson+")");
             var resultItems = resObj.response.body.items;
-            console.log(xmltojson);
-            var responseMessage ='[ ' + resultItems.item[0].PC_KOR_NM._text + ' ]\n';
+            //console.log(xmltojson);
+            
 
 
             for(var i=0 ; i < resultItems.item.length; i ++){
+                var responseMessage ='[ ' + resultItems.item[i].PC_KOR_NM._text + ' ]\n';
                 var addictive = resultItems.item[i].T_KOR_NM._text;
                 var specVal = resultItems.item[i].SPEC_VAL_SUMUP._text;
-                responseMessage += addictive + ' : ' + specVal + '\n';
+                var yn = resultItems.item[i].INJRY_YN._text;
+                responseMessage += addictive + ' : ' + specVal + '['+yn+']'+ '\n';
+                console.log('[responese message]',responseMessage);
             }
-            console.log('[responese message]',responseMessage);
+            
         }
     }
     //console.log('Status', response.statusCode);
