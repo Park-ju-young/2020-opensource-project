@@ -39,7 +39,7 @@ function hello(text2){
             "messages" :[
                 {
                     "type":"text",
-                    "text": "안녕하세요, 식품 유해정보를 알려드립니다.";
+                    "text": "안녕하세요, 식품 유해정보를 알려드립니다."
                 },
                 {
                     "type":"text",
