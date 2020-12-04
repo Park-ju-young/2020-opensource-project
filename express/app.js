@@ -19,24 +19,116 @@ const sslport = 23023;
 const bodyParser = require('body-parser');
 var app = express();
 app.use(bodyParser.json());
+
+
+function first(text1){
+    if(text1 == '궁금해요')
+        return true;
+    else 
+        return false;
+}
+
+function hello(text2){
+    request.post({
+        url: TARGET_URL,
+        headers:{
+            'Authorization': `Bearer ${TOKEN}`
+        },
+        json:{
+            "replyToken":eventObj,replyToken,
+            "messages" :[
+                {
+                    "type":"text",
+                    "text": "안녕하세요, 식품 유해정보를 알려드립니다.";
+                },
+                {
+                    "type":"text",
+                    "text": "무엇을 도와드릴까요?"
+                },
+                {
+                    "type":"text",
+                    "text": "식품 유해정보가 궁금하시면 y를 입력해주세요"
+                }
+
+            ]
+        }
+    },(error,response,body)=>{
+        console.log(body)
+    });
+}
+
+function inputfood(eventObj){
+    request.post({
+        url: TARGET_URL,
+        headers: {
+            'Authorization': `Bearer ${TOKEN}`
+        },
+        json:{
+            "replyToken" :eventObj.replyToken,
+            "messages":[
+                {
+                    "type":"text",
+                    "text": "입력하신 상품은 " + eventObj.replyToken +"입니다."
+                }
+            ]
+        }
+    }, (error, response,body) =>{
+            console.log(body)
+        
+    });
+}
+
+function findfood(foodtext){
+    //음식정보가 있으면 return true;
+    //음식정보가 없으면 return false;
+}
+
+function printinformation(foodtext){
+    //유해정보 출력하기
+
+}
 app.post('/hook', function (req, res) {
 
     var eventObj = req.body.events[0];
     var source = eventObj.source;
     var message = eventObj.message;
+    var text;
+    var text1;
+    var text2;
 
+    var findfoods;
     // request log
     console.log('======================', new Date() ,'======================');
     console.log('[request]', req.body);
     console.log('[request source] ', eventObj.source);
     console.log('[request message]', eventObj.message);
+    text = hello(text1);
 
-    getfoodinfo(eventObj.replyToken, eventObj.message.text); // eventObj.message.text 로 pc_kor_nm 받기
+    if(text == true){
+        console.log('Hi',message);
+        hello(text2);
+    }
+    inputfood(eventObj);
+
+    findfoods = findfood(message.text);
+    if(findfoods ==true){
+        console.log('음식을 찾았습니다.');
+        printinformation(findfoods);
+    }
+
+
+
+
+
+
+
+    //getfoodinfo(eventObj.replyToken, eventObj.message.text); // eventObj.message.text 로 pc_kor_nm 받기
     
 
-    res.sendStatus(200);
+    //res.sendStatus(200);
 });
 
+/*
 function getfoodinfo(replyToken, kor_name) {
 
     request.post(
@@ -88,7 +180,7 @@ function getfoodinfo(replyToken, kor_name) {
         });
 
 }
-
+*/
 try {
     const option = {
       ca: fs.readFileSync('/etc/letsencrypt/live/' + domain +'/fullchain.pem'),
