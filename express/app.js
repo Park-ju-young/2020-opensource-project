@@ -11,6 +11,33 @@ var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' +key;
 queryParams += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent('과.채음료'); 
 //queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('3'); 
 //queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
+
+var ProductCategoryName = '스위트초콜릿'; 
+
+
+var first_url = 'http://apis.data.go.kr/1470000/FoodAdtvInfoService/getFoodAdtvInfoList';
+var first_key ='ofY2ppOq5kBqT5jYPaGsW%2BEy7OR5a1bf5Z9PHvqNKvwO5DSCaU2x2qCj%2FoXnuB1YVbMTlErkHWSMEsR5b7isrw%3D%3D';
+var queryParams1 = '?' + encodeURIComponent('ServiceKey') + '=' +first_key; 
+//queryParams1 += '&' + encodeURIComponent('prdlst_cd') + '=' + encodeURIComponent('C0118010300000'); 
+queryParams1 += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent(ProductCategoryName); 
+//queryParams1 += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('213'); 
+//queryParams1 += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
+
+var NameOfProduct ='하루견과 요거트S'; // 제품명 넣는 자리
+var second_url ='http://openapi.foodsafetykorea.go.kr/api';
+var second_key ='f8ce3271a2dc4decb83b'; 
+var filetype ='json';
+var startIndex = 1;
+var endIndex = 5;
+var queryParams2 = '/' + encodeURIComponent(second_key); 
+queryParams2 += '/' + encodeURIComponent('C002'); 
+queryParams2 += '/' + encodeURIComponent(filetype); 
+queryParams2 += '/' + encodeURIComponent(startIndex); 
+queryParams2 += '/' + encodeURIComponent(endIndex); 
+queryParams2 += '/' + encodeURIComponent('PRDLST_NM') + '=' + encodeURIComponent(NameOfProduct); 
+//var fullRequest = encodeURIComponent("http://openapi.foodsafetykorea.go.kr/api/f8ce3271a2dc4decb83b/C002/xml/1/5/PRDLST_REPORT_NO=200101260032");
+//var fullRequest ='http://openapi.foodsafetykorea.go.kr/api/f8ce3271a2dc4decb83b/C002/json/1/5';
+
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
@@ -22,13 +49,13 @@ app.use(bodyParser.json());
 
 
 function first(text1){
-    if(text1 == '궁금해요')
+    if(text1 == 'y')
         return true;
     else 
         return false;
 }
 
-function hello(text2){
+function hello(eventObj){
     request.post({
         url: TARGET_URL,
         headers:{
@@ -57,36 +84,6 @@ function hello(text2){
     });
 }
 
-function inputfood(eventObj){
-    request.post({
-        url: TARGET_URL,
-        headers: {
-            'Authorization': `Bearer ${TOKEN}`
-        },
-        json:{
-            "replyToken" :eventObj.replyToken,
-            "messages":[
-                {
-                    "type":"text",
-                    "text": "입력하신 상품은 " + eventObj.replyToken +"입니다."
-                }
-            ]
-        }
-    }, (error, response,body) =>{
-            console.log(body)
-        
-    });
-}
-
-function findfood(foodtext){
-    //음식정보가 있으면 return true;
-    //음식정보가 없으면 return false;
-}
-
-function printinformation(foodtext){
-    //유해정보 출력하기
-
-}
 app.post('/hook', function (req, res) {
 
     var eventObj = req.body.events[0];
@@ -108,79 +105,171 @@ app.post('/hook', function (req, res) {
         console.log('Hi',message);
         hello(text2);
     }
-    inputfood(eventObj);
+    getfoodinfo(eventObj.replyToken); 
+    getfood(eventObj.replyToken);
 
-    findfoods = findfood(message.text);
-    if(findfoods ==true){
-        console.log('음식을 찾았습니다.');
-        printinformation(findfoods);
-    }
-
-
-
-
-
-
-
-    //getfoodinfo(eventObj.replyToken, eventObj.message.text); // eventObj.message.text 로 pc_kor_nm 받기
-    
-
-    //res.sendStatus(200);
+    res.sendStatus(200);
 });
 
-/*
-function getfoodinfo(replyToken, kor_name) {
+//rawmaterial
+// 식품의약품 안전처 품목제조보고(원재료) API 요청 예시입니다
 
+console.log("[Input msg] ", NameOfProduct);
+
+function getfoodinfo(replyToken){
     request.post(
         {
-            url: FOODAPI_URL + queryParams,
-        },(error, response, body) => {
-            if(error){
-                console.log('에러입니다.')
+            url: TARGET_URL,
+            headers:{
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            json:{
+                "replyToken": replyToken,
+                "messages":[
+                    {
+                        "type":"text",
+                        "text": "입력하신 상품은 " + replyToken +"입니다."
+                    }
+                ]
             }
-            else{
-                if(response.statusCode ==200)
-                {
-                    var result =body;
-                    var xmltojson = convert.xml2json(result,{compact:true,spaces:4});
-                    //console.log(xmltojson);
-                    var resObj = eval("("+xmltojson+")");
-                    var resultItems = resObj.response.body.items;
-                    var responseMessage ='[ ' + resultItems.item[0].PC_KOR_NM._text + ' ]\n';
+        },(error, reponse, body) => {
+            console.log(body)
+        });
 
+    request({
+        second_url: second_url + queryParams2,
+        //url : fullRequest,
+        method: 'GET'
+    }, function (error, response, body) {
+        if(error){
+            console.log('에러입니다.')
+        }
+        else{
+            if(response.statusCode ==200){
+                console.log("식품명으로 식품유형과 첨가물 정보를 받아옵니다...");
+                var result =body;
+                var resObj = eval("("+result+")");
+                var ProductCategory = resObj.C002.row[0].PRDLST_DCNM;
+                // 첨가물정보 API가 입력으로 받을 parameter
+
+                //console.log(result);
+                console.log("[처리결과] ",resObj.C002.RESULT.MSG);
+                console.log("[유형] ", ProductCategory);
+                console.log("[첨가물] ",resObj.C002.row[0].RAWMTRL_NM )
+         
+            }
+            request.post({
+                url:TARGET_URL,
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                json:{
+                    "messages":[
+                        {
+                            "type":"text",
+                            "text":"[처리결과] " + resObj.C002.RESULT.MSG
+                        },
+                        {
+                            "type":"text",
+                            "text":"[유형] " + ProductCategory
+                        },
+                        {
+                            "type":"text",
+                            "text":"[첨가물] " + resObj.C002.row[0].RAWMTRL_NM
+                        }
+                    ]
+                }
+            }),(error, response, body) =>{
+                console.log(body)
+            }
+        }
+
+    });
+}
+
+
+// 처음에 하던거
+function getfood(replyToken){
+    request.post(
+        {
+            url: TARGET_URL,
+            headers:{
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            json:{
+                "replyToken": replyToken,
+                "messages":[
+                    {
+                        "type":"text",
+                        "text": "입력하신 상품은 " + replyToken +"입니다."
+                    }
+                ]
+            }
+        },(error, reponse, body) => {
+            console.log(body)
+        });
+
+    request({
+        first_url: first_url + queryParams1,
+        method: 'GET'
+    }, function (error, response, body) {
+        if(error){
+            console.log('에러입니다.')
+        }
+        else{
+            if(response.statusCode ==200){
+                var result =body;
+                var xmltojson = convert.xml2json(result,{compact:true,spaces:4});
+                var resObj = eval("("+xmltojson+")");
+                var resultItems = resObj.response.body.items;
+                var resultLeng = Object.keys(resultItems);
+
+                if(Object.keys(resultItems).length != 0){
+                    console.log("valid input : 식품 첨가물 정보를 받아옵니다.");
+                
+                    var responseMessage ='[ ' + resultItems.item[0].PC_KOR_NM._text + ' ]\n';
+                    //하나의 카테고리에 대한 정보만 받는다고 가정해 반복문 밖으로 뺐습니다.
 
                     for(var i=0 ; i < resultItems.item.length; i ++)
                     {
+                        //var responseMessage ='[ ' + resultItems.item[i].PC_KOR_NM._text + ' ]\n';
                         var addictive = resultItems.item[i].T_KOR_NM._text;
                         var specVal = resultItems.item[i].SPEC_VAL_SUMUP._text;
-                        responseMessage += addictive + ' : ' + specVal + '\n';
+                        var yn = resultItems.item[i].INJRY_YN._text;
+                        responseMessage += addictive + ' : ' + specVal + '['+yn+']'+ '\n';
                     }
-                    console.log('[responese message]',responseMessage);
-                    
-                    request.post(
-                        {
-                            url: TARGET_URL,
-                            headers: {
-                                'Authorization': `Bearer ${TOKEN}`
-                            },
-                            json: {
-                                "replyToken":replyToken,
-                                "messages":[
-                                    {
-                                        "type":"text",
-                                        "text":responseMessage
-                                    }
-                                ]
-                            }
-                        },(error, response, body) => {
-                            console.log(body)
-                        });
-                }
-            }
-        });
 
+                }
+                else
+                {
+
+                    console.log("Invalid Input : 에러 메시지 전송");
+                    var responseMessage = "잘못 된 입력입니다. 라벨의 식품유형을 확인하고 다시 입력해주세요.";
+
+                }
+                    console.log('[responese message]',responseMessage);
+                    request.post({
+                        url: TARGET_URL,
+                        headers: {
+                            'Authorization': `Bearer ${TOKEN}`
+                        },
+                        json:{
+                            "messages": [
+                                {
+                                    "type":"text",
+                                    "text": responseMessage
+                                }
+                            ]
+                        }
+                    }),(error, response,body) =>{
+                        console.log(body)
+                    }
+            }
+        }
+
+    });
 }
-*/
+
 try {
     const option = {
       ca: fs.readFileSync('/etc/letsencrypt/live/' + domain +'/fullchain.pem'),
