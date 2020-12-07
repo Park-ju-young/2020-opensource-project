@@ -36,8 +36,9 @@ app.use(bodyParser.json());
 
 
 function first(text1){
-    if(text1 == 'y')
+    if(text1 == 'y'){
         return true;
+    }
     else 
         return false;
 }
@@ -49,7 +50,7 @@ function hello(eventObj){
             'Authorization': `Bearer ${TOKEN}`
         },
         json:{
-            "replyToken":eventObj,replyToken,
+            "replyToken":eventObj.replyToken,
             "messages" :[
                 {
                     "type":"text",
@@ -76,8 +77,8 @@ app.post('/hook', function (req, res) {
     var eventObj = req.body.events[0];
     var source = eventObj.source;
     var message = eventObj.message;
-    var text;
-    var text1;
+    var message_text = message.text;
+    //var text1;
     var text2;
 
     var findfoods;
@@ -86,14 +87,16 @@ app.post('/hook', function (req, res) {
     console.log('[request]', req.body);
     console.log('[request source] ', eventObj.source);
     console.log('[request message]', eventObj.message);
-    text = hello(text1);
+    text = first(message_text);
 
     if(text == true){
         console.log('Hi',message);
-        hello(text2);
+        hello(eventObj);
     }
+    else{
     getfoodinfo(eventObj.replyToken); 
     getfood(eventObj.replyToken);
+    }
 
     res.sendStatus(200);
 });
