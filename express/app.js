@@ -4,37 +4,24 @@ const convert = require('xml-js');
 
 const TARGET_URL = 'https://api.line.me/v2/bot/message/reply'
 const TOKEN = 'z5iy5sMU1W4xZAlwvn0/5x4U+4ZsqI0hKO1ZZNFxUGlNzGBjFg2D1u6/Ij5C/Sbkncx3hyYg7Nfz5JnMD8BG/9Z3TEEHPvy1A2XhkPKs04v0/n6TjH1A3e9X23zYdYmNSGyPn2hDGglgm2p3YmtLSwdB04t89/1O/w1cDnyilFU='
-const FOODAPI_URL = 'http://apis.data.go.kr/1470000/FoodAdtvInfoService/getFoodAdtvInfoList'
-const FOODAPI_KEY = 'ofY2ppOq5kBqT5jYPaGsW%2BEy7OR5a1bf5Z9PHvqNKvwO5DSCaU2x2qCj%2FoXnuB1YVbMTlErkHWSMEsR5b7isrw%3D%3D';
-var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' +key; 
-//queryParams += '&' + encodeURIComponent('prdlst_cd') + '=' + encodeURIComponent('C0118010300000'); 
-queryParams += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent('과.채음료'); 
-//queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('3'); 
-//queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
 
-var ProductCategoryName = '스위트초콜릿'; 
-
-
+var ProductCategoryName ; 
 var first_url = 'http://apis.data.go.kr/1470000/FoodAdtvInfoService/getFoodAdtvInfoList';
 var first_key ='ofY2ppOq5kBqT5jYPaGsW%2BEy7OR5a1bf5Z9PHvqNKvwO5DSCaU2x2qCj%2FoXnuB1YVbMTlErkHWSMEsR5b7isrw%3D%3D';
+/*
 var queryParams1 = '?' + encodeURIComponent('ServiceKey') + '=' +first_key; 
 //queryParams1 += '&' + encodeURIComponent('prdlst_cd') + '=' + encodeURIComponent('C0118010300000'); 
 queryParams1 += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent(ProductCategoryName); 
 //queryParams1 += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('213'); 
 //queryParams1 += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
+*/
 
-var NameOfProduct ='하루견과 요거트S'; // 제품명 넣는 자리
+var NameOfProduct ; // 제품명 넣는 자리
 var second_url ='http://openapi.foodsafetykorea.go.kr/api';
 var second_key ='f8ce3271a2dc4decb83b'; 
 var filetype ='json';
 var startIndex = 1;
-var endIndex = 5;
-var queryParams2 = '/' + encodeURIComponent(second_key); 
-queryParams2 += '/' + encodeURIComponent('C002'); 
-queryParams2 += '/' + encodeURIComponent(filetype); 
-queryParams2 += '/' + encodeURIComponent(startIndex); 
-queryParams2 += '/' + encodeURIComponent(endIndex); 
-queryParams2 += '/' + encodeURIComponent('PRDLST_NM') + '=' + encodeURIComponent(NameOfProduct); 
+var endIndex = 5; 
 //var fullRequest = encodeURIComponent("http://openapi.foodsafetykorea.go.kr/api/f8ce3271a2dc4decb83b/C002/xml/1/5/PRDLST_REPORT_NO=200101260032");
 //var fullRequest ='http://openapi.foodsafetykorea.go.kr/api/f8ce3271a2dc4decb83b/C002/json/1/5';
 
@@ -136,6 +123,12 @@ function getfoodinfo(replyToken){
             console.log(body)
         });
 
+        var queryParams2 = '/' + encodeURIComponent(second_key); 
+        queryParams2 += '/' + encodeURIComponent('C002'); 
+        queryParams2 += '/' + encodeURIComponent(filetype); 
+        queryParams2 += '/' + encodeURIComponent(startIndex); 
+        queryParams2 += '/' + encodeURIComponent(endIndex); 
+        queryParams2 += '/' + encodeURIComponent('PRDLST_NM') + '=' + encodeURIComponent(replyToken); 
     request({
         second_url: second_url + queryParams2,
         //url : fullRequest,
@@ -209,6 +202,13 @@ function getfood(replyToken){
             console.log(body)
         });
 
+        var queryParams1 = '?' + encodeURIComponent('ServiceKey') + '=' +first_key; 
+        //queryParams1 += '&' + encodeURIComponent('prdlst_cd') + '=' + encodeURIComponent('C0118010300000'); 
+        queryParams1 += '&' + encodeURIComponent('pc_kor_nm') + '=' + encodeURIComponent(replyToken); 
+        //queryParams1 += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('213'); 
+        //queryParams1 += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); 
+        
+        
     request({
         first_url: first_url + queryParams1,
         method: 'GET'
