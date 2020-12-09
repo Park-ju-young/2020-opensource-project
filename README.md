@@ -19,29 +19,47 @@
 
 ## ◎설치 방법
 1. repository를 clone을 먼저 해줍니다.
+
  git clone http://khuhub.khu.ac.kr/term-project/project.git
 
 2. 필요한 key들을 발급받습니다.
+
  식품(첨가물)품목제조보고(원재료) key :https://www.foodsafetykorea.go.kr/api/openApiInfo.do?menu_grp=MENU_GRP31&menu_no=661&show_cnt=10&start_idx=1&svc_no=C002
+
 식품의약품안전처_식품첨가물 정보 서비스:https://www.data.go.kr/data/15058807/openapi.do
+
  line developer: https://developers.line.biz/en/services/messaging-api/
 
 3. 필요한 module을 다운받습니다.
-npm install
-npm install express
-npm install xml-js
-4. app.js를 수정합니다.
 
+npm install
+
+npm install express
+
+npm install xml-js
+
+4. app.js를 수정합니다.
+const TOKEN = 'line' // line messenger api의 channel access token으로 수정합니다. 
+
+var first_key = '식품첨가물 정보 서비스' // 발급받은 식품첨가물 정보 서비스의 key로 수정합니다. 
+
+var second_key = '식품품목제조보고(원재료)' // 발급받은 식품품목제조보고 key로 수정합니다.
+
+const domain = 'your domain' // 당신의 도메인의 주소로 수정합니다. 
 
 
 ## ◎Built with
 Nodejs
+
 Express
+
 Line Messenger API
 
 ## ◎API 
  식품(첨가물)품목제조보고(원재료) (제공기관: 식품의약품안전처)
+
  식품의약품안전처_식품첨가물 정보 서비스(제공기관: 식품의약품안전처)
+
  Line Messenger API
 
 
