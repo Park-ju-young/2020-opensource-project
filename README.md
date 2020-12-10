@@ -66,3 +66,5 @@ Line Messenger API
 
 ## 연락처
 jj5973@khu.ac.kr
+
+ssol2906@khu.ac.kr
