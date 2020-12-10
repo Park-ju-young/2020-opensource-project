@@ -3,24 +3,23 @@ const request = require('request');
 const convert = require('xml-js');
 
 const TARGET_URL = 'https://api.line.me/v2/bot/message/reply'
-const TOKEN = 'z5iy5sMU1W4xZAlwvn0/5x4U+4ZsqI0hKO1ZZNFxUGlNzGBjFg2D1u6/Ij5C/Sbkncx3hyYg7Nfz5JnMD8BG/9Z3TEEHPvy1A2XhkPKs04v0/n6TjH1A3e9X23zYdYmNSGyPn2hDGglgm2p3YmtLSwdB04t89/1O/w1cDnyilFU='
+const TOKEN = 'line' // line messenger api의 channel access token으로 수정합니다. 
 
 var ProductCategoryName ; 
 var first_url = 'http://apis.data.go.kr/1470000/FoodAdtvInfoService/getFoodAdtvInfoList';
-var first_key ='ofY2ppOq5kBqT5jYPaGsW%2BEy7OR5a1bf5Z9PHvqNKvwO5DSCaU2x2qCj%2FoXnuB1YVbMTlErkHWSMEsR5b7isrw%3D%3D';
+var first_key = '식품첨가물 정보 서비스' // 발급받은 식품첨가물 정보 서비스의 key로 수정합니다. 
 
 var second_url ='http://openapi.foodsafetykorea.go.kr/api';
-var second_key ='f8ce3271a2dc4decb83b'; 
+var second_key = '식품품목제조보고(원재료)' // 발급받은 식품품목제조보고 key로 수정합니다.
 var filetype ='json';
 var startIndex = 1;
 var endIndex = 5; 
 var simpleResult = true;
 
-
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
-const domain = "www.foodbot2020.ml"
+const domain = 'your domain' // 당신의 도메인의 주소로 수정합니다.
 const sslport = 23023;
 const bodyParser = require('body-parser');
 var app = express();
